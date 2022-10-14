@@ -58,6 +58,31 @@ router.delete("/:id", async (req, res, next) => {
 });
 
 //follow a user
+router.put("/:id/follow", async (req, res, next) => {
+  // check to see if you're trying to follow yourself
+  if (req.body.userId !== req.params.id) {
+    try {
+      // find current user and the user you want to follow
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.body.userId);
+
+      // check to see if this user is already followed by you
+      if (!user.followers.includes(req.body.userId)) {
+        // push to followings array for current user and vice versa
+        await user.updateOne({ $push: { followers: req.body.userId } });
+        await currentUser.updateOne({ $push: { followings: req.params.id } });
+        res.status(200).json("user has been followed");
+      } else {
+        res.status(403).json("you are already following this user");
+      }
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  } else {
+    res.status(403).json("you cannot follow yourself");
+  }
+});
+
 //unfollow a user
 
 router.get("/", (req, res, next) => {
