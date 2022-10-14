@@ -61,16 +61,17 @@ router.put("/:id/like", async (req, res, next) => {
 
     // check when user already liked this post
     if (!post.likes.includes(currentUser)) {
-      const newLikes = post.likes;
-      newLikes.push(currentUser);
-
       // add current user to post's likes array
       await Post.findByIdAndUpdate(req.params.id, {
-        $set: { likes: newLikes },
+        $push: { likes: currentUser },
       });
       res.status(200).json("user liked this post");
     } else {
-      res.status(403).json("you already liked the post");
+      // remove current user from post's likes array
+      await Post.findByIdAndUpdate(req.params.id, {
+        $pull: { likes: currentUser },
+      });
+      res.status(200).json("user disliked this post");
     }
   } catch (err) {
     res.status(500).json(err.message);
