@@ -84,6 +84,37 @@ router.put("/:id/follow", async (req, res, next) => {
 });
 
 //unfollow a user
+router.put("/:id/unfollow", async (req, res, next) => {
+  // check to see if trying to unfollow yourself
+  if (req.body.userId !== req.params.id) {
+    const user = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.body.userId);
+
+    // see if current user is currently following user
+    if (currentUser.followings.includes(req.params.id)) {
+      // filter out user from current user followings array
+      const newFollowings = currentUser.followings.filter(
+        (id) => id !== req.params.id
+      );
+      // filter out current user from user followers array
+      const newFollowers = user.followers.filter(
+        (id) => id !== req.body.userId
+      );
+      // update with new followers and followings for both users
+      await User.findByIdAndUpdate(req.body.userId, {
+        $set: { followings: newFollowings },
+      });
+      await User.findByIdAndUpdate(req.params.id, {
+        $set: { followers: newFollowers },
+      });
+      res.status(200).json("unfollowed user");
+    } else {
+      res.status(403).json("you are not following this user");
+    }
+  } else {
+    res.status(403).json("you cannot unfollow yourself");
+  }
+});
 
 router.get("/", (req, res, next) => {
   res.send("user route");
