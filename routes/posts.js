@@ -17,6 +17,7 @@ router.post("/", async (req, res, next) => {
     res.status(403).json("need userId associated with making new post");
   }
 });
+
 // update a post
 router.put("/:id", async (req, res, next) => {
   try {
@@ -52,6 +53,29 @@ router.delete("/:id", async (req, res, next) => {
 });
 
 // like a post
+router.put("/:id/like", async (req, res, next) => {
+  try {
+    // find post
+    const post = await Post.findById(req.params.id);
+    const currentUser = req.body.userId;
+
+    // check when user already liked this post
+    if (!post.likes.includes(currentUser)) {
+      const newLikes = post.likes;
+      newLikes.push(currentUser);
+
+      // add current user to post's likes array
+      await Post.findByIdAndUpdate(req.params.id, {
+        $set: { likes: newLikes },
+      });
+      res.status(200).json("user liked this post");
+    } else {
+      res.status(403).json("you already liked the post");
+    }
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
 // get a post
 // get timeline posts (all posts of user's followings)
 
