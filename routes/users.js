@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 //update user
 router.put("/:id", async (req, res, next) => {
   // check to see if user is updating own account or is an admin
-  if (req.body.userId === req.params.id || req.user.isAdmin) {
+  if (req.body.userId === req.params.id || req.body.isAdmin) {
     // if password is inputted, need to hash before saving to db
     if (req.body.password) {
       try {
@@ -31,6 +31,19 @@ router.put("/:id", async (req, res, next) => {
 });
 
 //delete user
+router.delete("/:id", async (req, res, next) => {
+  // check to see if user is updating own account or is an admin
+  if (req.body.userId === req.params.id || req.body.isAdmin) {
+    try {
+      const user = await User.findByIdAndDelete(req.params.id);
+      res.status(200).json("user deleted");
+    } catch (err) {
+      return res.status(500).json(err.message);
+    }
+  } else {
+    res.status(403).json("you can only delete your own account");
+  }
+});
 //get a user
 //follow a user
 //unfollow a user
