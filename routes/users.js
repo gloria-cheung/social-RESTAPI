@@ -2,6 +2,16 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
+//get a user
+router.get("/:id", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 //update user
 router.put("/:id", async (req, res, next) => {
   // check to see if user is updating own account or is an admin
@@ -44,7 +54,7 @@ router.delete("/:id", async (req, res, next) => {
     res.status(403).json("you can only delete your own account");
   }
 });
-//get a user
+
 //follow a user
 //unfollow a user
 
