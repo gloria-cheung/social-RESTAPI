@@ -18,6 +18,22 @@ router.post("/", async (req, res, next) => {
   }
 });
 // update a post
+router.put("/:id", async (req, res, next) => {
+  try {
+    // find post and check whether userId matches the user whos trying to update
+    const post = await Post.findById(req.params.id);
+    if (post.userId === req.body.userId) {
+      await Post.findByIdAndUpdate(req.params.id, {
+        $set: req.body,
+      });
+      res.status(200).json("post updated");
+    } else {
+      res.status(403).json("you can only update your own posts");
+    }
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
 
 // delete a post
 router.delete("/:id", async (req, res, next) => {
