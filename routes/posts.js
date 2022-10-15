@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 // create a post
 router.post("/", async (req, res, next) => {
@@ -92,6 +93,28 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // get timeline posts (all posts of user's followings)
+router.get("/timeline/all", async (req, res, next) => {
+  if (!req.body.userId) {
+    res.status.apply(403).json("userId is needed");
+  }
+
+  try {
+    // find user and their followings
+    const user = await User.findById(req.body.userId);
+    const followings = user.followings;
+    // find each post associated with the user that the current user is following and push onto array
+    let posts = [];
+    for (let eachUserId of followings) {
+      const postsForUserId = await Post.find({ userId: eachUserId });
+      posts.push(postsForUserId);
+    }
+
+    //flatten array so easier for client to use the json data
+    res.status(200).json(posts.flat());
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
 
 router.get("/", (req, res, next) => {
   res.send("post route");
