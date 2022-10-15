@@ -52,7 +52,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// like a post
+// like or dislike a post
 router.put("/:id/like", async (req, res, next) => {
   try {
     // find post
@@ -77,7 +77,20 @@ router.put("/:id/like", async (req, res, next) => {
     res.status(500).json(err.message);
   }
 });
+
 // get a post
+router.get("/:id", async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      res.send(403).json("no post was found");
+    }
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 // get timeline posts (all posts of user's followings)
 
 router.get("/", (req, res, next) => {
