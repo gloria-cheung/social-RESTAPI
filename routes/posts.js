@@ -116,4 +116,21 @@ router.get("/timeline/:userId", async (req, res, next) => {
   }
 });
 
+// get all posts of current user
+router.get("/profile/:userId", async (req, res, next) => {
+  if (!req.params.userId) {
+    res.status.apply(403).json("userId is needed");
+  }
+
+  try {
+    // find user and posts
+    const user = await User.findById(req.params.userId);
+    const posts = await Post.find({ userId: user._id });
+
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 module.exports = router;
