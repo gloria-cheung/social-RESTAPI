@@ -93,14 +93,14 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // get timeline posts (all posts of user's followings)
-router.get("/timeline/all", async (req, res, next) => {
-  if (!req.body.userId) {
+router.get("/timeline/:userId", async (req, res, next) => {
+  if (!req.params.userId) {
     res.status.apply(403).json("userId is needed");
   }
 
   try {
     // find user and their followings
-    const user = await User.findById(req.body.userId);
+    const user = await User.findById(req.params.userId);
     const followings = user.followings;
     // find each post associated with the user that the current user is following and push onto array
     let posts = [];
