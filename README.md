@@ -62,6 +62,26 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
 
     "user deleted"
 
+## Get an Existing User
+
+### Request
+
+`GET /api/users/`
+
+    curl -H "Content-Type: application/json" -X GET "http://localhost:1234/api/users?username=Bob"
+
+    curl -H "Content-Type: application/json" -X GET "http://localhost:1234/api/users?userId=634adf302e71b8012bf86578"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Thu, 15 Oct 2022 16:26:24 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    {"username":"Bob","email":"test@gmail.com", "profilePicture":"","coverPicture":"","followers":[],"followings":[],"isAdmin":false,"_id":"634adf302e71b8012bf86578","createdAt":"2022-10-15T16:26:24.509Z", "__v":0}
+
 ## Follow Another User
 
 ### Request
@@ -174,9 +194,9 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
 
 ### Request
 
-`GET /api/posts/timeline/all`
+`GET /api/posts/timeline/:id`
 
-    curl -d '{"userId":"6349ca31eec073685e29ba10"}' -H "Content-Type: application/json" -X GET "http://localhost:1234/api/posts/timeline/all"
+    curl -H "Content-Type: application/json" -X GET "http://localhost:1234/api/posts/timeline/6349ca31eec073685e29ba10"
 
 ### Response
 
@@ -189,6 +209,24 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
     [{"_id":"634aca616b72f59e263be3bd","userId":"6349cd25998a1c513d539257","desc":"dog","img":"http://www.dogimg.com","likes":[],"createdAt":"2022-10-15T14:57:37.131Z","updatedAt":"2022-10-15T14:57:37.131Z","__v":0},
       {"_id":"634ad88fa0dc59edb776783b","userId":"6349cd25998a1c513d539257","desc":"chicken","img":"http://www.chicken.com","likes":[],"createdAt":"2022-10-15T15:58:07.993Z","updatedAt":"2022-10-15T15:58:07.993Z","__v":0},
       {"_id":"634aca486b72f59e263be3bb","userId":"634ac9db6b72f59e263be3b9","desc":"cat","img":"http://www.catimg.com","likes":[],"createdAt":"2022-10-15T14:57:12.296Z","updatedAt":"2022-10-15T14:57:12.296Z","__v":0}]
+
+## Get Posts from User
+
+### Request
+
+`GET /api/posts/profile/:id`
+
+    curl -H "Content-Type: application/json" -X GET "http://localhost:1234/api/posts/profile/6349ca31eec073685e29ba10"
+
+### Response
+
+    HTTP/1.1 200 OK
+    Date: Thu, 15 Oct 2022 16:42:49 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: application/json
+
+    [{"_id":"634acaa16b72f59e263be3dd","userId":"6349ca31eec073685e29ba10","desc":"bunny","img":"http://www.bunnyimg.com","likes":[],"createdAt":"2022-10-15T14:57:37.131Z","updatedAt":"2022-10-15T14:57:37.131Z","__v":0}]
 
 ## Project Stack
 
