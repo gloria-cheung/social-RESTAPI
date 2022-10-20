@@ -13,6 +13,9 @@ router.get("/", async (req, res, next) => {
       ? await User.findById(userId)
       : await User.findOne({ username: username });
     // so we dont send unneeded info to client
+    if (!user) {
+      return res.status(403).json("cannot find user");
+    }
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
@@ -60,6 +63,22 @@ router.delete("/:id", async (req, res, next) => {
     }
   } else {
     res.status(403).json("you can only delete your own account");
+  }
+});
+
+//get user followings
+router.get("/:id/followings", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const followings = user.followings;
+    let result = [];
+    for (let userId of followings) {
+      const userObj = await User.findById(userId);
+      result.push(userObj);
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json(err.message);
   }
 });
 
