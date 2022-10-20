@@ -30,7 +30,7 @@ router.post("/login", async (req, res, next) => {
     // check to see if email is in db
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.status(404).json("user not found");
+      return res.status(404).json("user not found");
     }
     // check to see if password matches password in db
     const validPassword = await bcrypt.compare(
@@ -39,7 +39,7 @@ router.post("/login", async (req, res, next) => {
     );
 
     if (!validPassword) {
-      res.status(400).json("wrong password");
+      return res.status(400).json("wrong password");
     }
 
     res.status(200).json(user);
