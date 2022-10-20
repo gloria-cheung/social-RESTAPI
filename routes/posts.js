@@ -2,6 +2,43 @@ const router = require("express").Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
 
+// get timeline posts (all posts of user's followings)
+router.get("/timeline/:userId", async (req, res, next) => {
+  if (!req.params.userId) {
+    res.status.apply(403).json("userId is needed");
+  }
+
+  try {
+    // find user and their followings
+    const user = await User.findById(req.params.userId);
+    const followings = user.followings;
+    // find each post associated with the user that the current user is following and push onto array
+    let posts = [];
+    for (let eachUserId of followings) {
+      const postsForUserId = await Post.find({ userId: eachUserId });
+      posts.push(postsForUserId);
+    }
+
+    //flatten array so easier for client to use the json data
+    res.status(200).json(posts.flat());
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
+// get all posts of current user
+router.get("/profile/:userId", async (req, res, next) => {
+  try {
+    // find user and posts
+    const user = await User.findById({ _id: req.params.userId });
+    const posts = await Post.find({ userId: user._id });
+
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
+
 // create a post
 router.post("/", async (req, res, next) => {
   // check to see if body has userId since its required
@@ -83,51 +120,7 @@ router.put("/:id/like", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) {
-      res.send(403).json("no post was found");
-    }
     res.status(200).json(post);
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-});
-
-// get timeline posts (all posts of user's followings)
-router.get("/timeline/:userId", async (req, res, next) => {
-  if (!req.params.userId) {
-    res.status.apply(403).json("userId is needed");
-  }
-
-  try {
-    // find user and their followings
-    const user = await User.findById(req.params.userId);
-    const followings = user.followings;
-    // find each post associated with the user that the current user is following and push onto array
-    let posts = [];
-    for (let eachUserId of followings) {
-      const postsForUserId = await Post.find({ userId: eachUserId });
-      posts.push(postsForUserId);
-    }
-
-    //flatten array so easier for client to use the json data
-    res.status(200).json(posts.flat());
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-});
-
-// get all posts of current user
-router.get("/profile/:userId", async (req, res, next) => {
-  if (!req.params.userId) {
-    res.status.apply(403).json("userId is needed");
-  }
-
-  try {
-    // find user and posts
-    const user = await User.findById(req.params.userId);
-    const posts = await Post.find({ userId: user._id });
-
-    res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err.message);
   }
