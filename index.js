@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 
+//routes mounted
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
