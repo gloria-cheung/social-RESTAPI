@@ -241,7 +241,6 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
 - helmet
 - morgan
 - nodemon
-- multer
 
 ## Connect With Me
 
