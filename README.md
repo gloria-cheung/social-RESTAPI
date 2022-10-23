@@ -6,7 +6,7 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
 
 - Set up .env file using .env.example file
 - Navigate to root and install dependencies with `npm install`
-- Go to localhost:1234
+- Server is running on http://localhost:1234
 
 ## Create a New User
 
