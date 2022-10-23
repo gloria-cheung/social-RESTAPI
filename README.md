@@ -20,7 +20,7 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
 
     HTTP/1.1 201 Created
     Date: Thu, 15 Oct 2022 16:26:24 GMT
-    Status: 200 OK
+    Status: 201 Created
     Connection: close
     Content-Type: application/json
 
@@ -112,7 +112,7 @@ An open-source RESTful API developed using NodeJS, ExpressJS and MongoDB helps c
 
     HTTP/1.1 201 Created
     Date: Thu, 15 Oct 2022 16:42:49 GMT
-    Status: 200 OK
+    Status: 201 Created
     Connection: close
     Content-Type: application/json
 
